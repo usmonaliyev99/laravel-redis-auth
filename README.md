@@ -12,6 +12,7 @@ The Laravel Redis Auth Package is a Composer package that provides authenticatio
 ## Requirements
 
 - PHP >= 7.4
+- predis/predis
 - Redis database
 
 ## Installation
