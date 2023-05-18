@@ -30,12 +30,11 @@ class RedisAuthMiddleware
         }
 
         $token = $receivedToken;
-        $key = config('redis-auth.prefix') . $token;
 
         [$receivedToken, $receivedSignature] = explode(':', $receivedToken);
         $calculatedSignature = hash_hmac(config('redis-auth.algo'), $receivedToken, config('redis-auth.secret_key'));
 
-        $user = Cache::get($key);
+        $user = Cache::get($token);
 
         if ($receivedSignature !== $calculatedSignature or !$user) {
             throw new HttpResponseException(

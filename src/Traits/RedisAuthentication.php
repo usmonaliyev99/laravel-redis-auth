@@ -39,13 +39,11 @@ trait RedisAuthentication
      */
     private function storeTokenToRedis(string $token, array $abilities, ?DateTimeInterface $expiresAt): void
     {
-        $key = config('redis-auth.prefix') . $token;
-
         $this->abilities = collect($abilities)
             ->flip()
             ->toArray();
 
-        Cache::put($key, $this, $expiresAt?->format('Y-m-d H:i:s'));
+        Cache::put($token, $this, $expiresAt?->format('Y-m-d H:i:s'));
     }
 
     /**
