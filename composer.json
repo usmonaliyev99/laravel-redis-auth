@@ -1,0 +1,29 @@
+{
+    "name": "usmonaliyev/laravel-redis-auth",
+    "version": "1.0.0",
+    "description": "Laravel authorization and authentication with redis database.",
+    "keywords": ["laravel", "redis", "auth"],
+    "require": {
+        "php": "^7.4|^8.1",
+        "predis/predis": "^2.1"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Usmonaliyev\\LaravelRedisAuth\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Temur5319436",
+            "email": "temur5319436@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Usmonaliyev\\LaravelRedisAuth\\Providers\\RedisAuthServiceProvider"
+            ]
+        }
+    }
+}
