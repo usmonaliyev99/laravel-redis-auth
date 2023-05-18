@@ -1,6 +1,6 @@
 {
     "name": "usmonaliyev/laravel-redis-auth",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "Laravel authorization and authentication with redis database.",
     "keywords": ["laravel", "redis", "auth"],
     "require": {
