@@ -22,7 +22,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Usmonaliyev\\LaravelRedisAuth\\Providers\\RedisAuthServiceProvider"
+                "Usmonaliyev\\LaravelRedisAuth\\RedisAuthServiceProvider"
             ]
         }
     }
