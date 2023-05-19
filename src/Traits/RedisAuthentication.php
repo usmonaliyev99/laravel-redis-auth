@@ -13,9 +13,6 @@ use Usmonaliyev\LaravelRedisAuth\Exceptions\NoAbilityException;
  */
 trait RedisAuthentication
 {
-    /**
-     *
-     */
     public $abilities = [];
 
     /**
@@ -67,10 +64,10 @@ trait RedisAuthentication
      */
     public function check(mixed $ability, string $message = "You don't have ability..."): bool
     {
-        if (!isset($this->abilities[$ability])) {
+        if (! isset($this->abilities[$ability])) {
             throw new NoAbilityException(
                 new JsonResponse([
-                    'message' => $message
+                    'message' => $message,
                 ], JsonResponse::HTTP_FORBIDDEN)
             );
         }

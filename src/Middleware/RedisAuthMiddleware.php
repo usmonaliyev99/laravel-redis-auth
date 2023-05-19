@@ -29,7 +29,7 @@ class RedisAuthMiddleware
 
         $token = $receivedToken;
 
-        if (!strpos($token, ':')) {
+        if (! strpos($token, ':')) {
             throw new UnauthorizedException();
         }
 
@@ -38,7 +38,7 @@ class RedisAuthMiddleware
 
         $user = Redis::get($token);
 
-        if ($receivedSignature !== $calculatedSignature or !$user) {
+        if ($receivedSignature !== $calculatedSignature or ! $user) {
             throw new UnauthorizedException();
         }
 
