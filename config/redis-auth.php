@@ -18,4 +18,8 @@ return [
      */
     'token_ttl' => env('REDIS_AUTH_TOKEN_TTL', 3600 * 24),
 
+    /**
+     */
+    'unauthorized_message' => env('UNAUTHORIZED_MESSAGE', 'Unauthorized...'),
+
 ];

@@ -3,13 +3,11 @@
 namespace Usmonaliyev\LaravelRedisAuth\Middleware;
 
 use Closure;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redis;
 use Symfony\Component\HttpFoundation\Response;
+use Usmonaliyev\LaravelRedisAuth\Exceptions\UnauthorizedException;
 
 /**
  * class RedisAuthMiddleware
@@ -31,17 +29,17 @@ class RedisAuthMiddleware
 
         $token = $receivedToken;
 
+        if (!strpos($token, ':')) {
+            throw new UnauthorizedException();
+        }
+
         [$receivedToken, $receivedSignature] = explode(':', $receivedToken);
         $calculatedSignature = hash_hmac(config('redis-auth.algo'), $receivedToken, config('redis-auth.secret_key'));
 
         $user = Redis::get($token);
 
         if ($receivedSignature !== $calculatedSignature or !$user) {
-            throw new HttpResponseException(
-                response: new JsonResponse(data: [
-                    'message' => 'Unauthorized...',
-                ], status: HttpResponse::HTTP_UNAUTHORIZED)
-            );
+            throw new UnauthorizedException();
         }
 
         Auth::login(unserialize($user));
