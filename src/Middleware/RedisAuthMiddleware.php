@@ -8,7 +8,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -34,7 +34,7 @@ class RedisAuthMiddleware
         [$receivedToken, $receivedSignature] = explode(':', $receivedToken);
         $calculatedSignature = hash_hmac(config('redis-auth.algo'), $receivedToken, config('redis-auth.secret_key'));
 
-        $user = Cache::get($token);
+        $user = Redis::get($token);
 
         if ($receivedSignature !== $calculatedSignature or !$user) {
             throw new HttpResponseException(
@@ -44,7 +44,7 @@ class RedisAuthMiddleware
             );
         }
 
-        Auth::login($user);
+        Auth::login(unserialize($user));
 
         return $next($request);
     }

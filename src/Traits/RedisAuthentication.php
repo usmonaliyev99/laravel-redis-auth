@@ -3,9 +3,8 @@
 namespace Usmonaliyev\LaravelRedisAuth\Traits;
 
 use DateTimeInterface;
-use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Redis;
 use Usmonaliyev\LaravelRedisAuth\Exceptions\NoAbilityException;
 
 /**
@@ -43,7 +42,11 @@ trait RedisAuthentication
             ->flip()
             ->toArray();
 
-        Cache::put($token, $this, $expiresAt?->format('Y-m-d H:i:s'));
+        if ($expiresAt) {
+            Redis::setex($token, serialize($this), $expiresAt?->format('Y-m-d H:i:s'));
+        } else {
+            Redis::set($token, serialize($this));
+        }
     }
 
     /**
@@ -54,6 +57,9 @@ trait RedisAuthentication
         return $this->abilities;
     }
 
+    /**
+     * Check a ability
+     */
     public function check(mixed $ability, string $message = "You don't have ability..."): bool
     {
         if (!isset($this->abilities[$ability])) {
