@@ -4,9 +4,6 @@ The Laravel Redis Auth Package is a Composer package that provides authenticatio
 
 ## Features
 
-- User registration with email and password
-- User login and logout
-- Password reset functionality
 - Middleware for protecting routes based on authentication
 
 ## Requirements
@@ -20,7 +17,7 @@ The Laravel Redis Auth Package is a Composer package that provides authenticatio
 Install the package via Composer:
 
 ```bash
-composer require your-username/redis-auth-package
+composer require usmonaliyev/laravel-redis-auth
 ```
 
 ## Publish
@@ -28,7 +25,7 @@ composer require your-username/redis-auth-package
 Publish the package configuration:
 
 ```bash
-php artisan vendor:publish --provider="Your\Namespace\RedisAuthPackageServiceProvider" --tag="config"
+php artisan vendor:publish --provider="Usmonaliyev\LaravelRedisAuth\RedisAuthServiceProvider"
 ```
 
 ## Usage
@@ -36,18 +33,18 @@ php artisan vendor:publish --provider="Your\Namespace\RedisAuthPackageServicePro
 Update the `.env` configuration to use the cache for authentication:
 
 ```bash
-CACHE_DRIVER=redis
-
 REDIS_CLIENT=predis
 REDIS_HOST=127.0.0.1
 REDIS_PASSWORD=null
 REDIS_PORT=6379
+
+REDIS_PREFIX=''
 ```
 
 You can protect your routes by adding the auth middleware to them:
 
 ```bash
-Route::group(['middleware' => 'auth'], function () {
+Route::group(['middleware' => 'redis-auth'], function () {
     // Protected routes
 });
 ```
