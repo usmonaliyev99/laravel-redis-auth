@@ -13,4 +13,9 @@ return [
      */
     'secret_key' => env('REDIS_AUTH_SECRET_KEY', 'laravel-redis-auth-secret-key'),
 
+    /**
+     * token_ttl represents the Token Time To Live, which defines the lifespan or expiration time of a token.
+     */
+    'token_ttl' => env('REDIS_AUTH_TOKEN_TTL', 3600 * 24),
+
 ];

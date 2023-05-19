@@ -2,6 +2,7 @@
 
 namespace Usmonaliyev\LaravelRedisAuth\Traits;
 
+use DateTime;
 use DateTimeInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Redis;
@@ -43,9 +44,13 @@ trait RedisAuthentication
             ->toArray();
 
         if ($expiresAt) {
-            Redis::setex($token, serialize($this), $expiresAt?->format('Y-m-d H:i:s'));
+            $diff = date_diff(new DateTime(), $expiresAt);
+
+            $seconds = $diff->s + ($diff->i * 60) + ($diff->h * 3600) + ($diff->days * 86400);
+
+            Redis::setex($token, $seconds, serialize($this));
         } else {
-            Redis::set($token, serialize($this));
+            Redis::setex($token, config('redis-auth.token_ttl'), serialize($this));
         }
     }
 
