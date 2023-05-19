@@ -13,7 +13,14 @@ class RedisAuthServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/redis-auth.php', 'redis-auth');
+        $this->mergeConfigFrom(__DIR__ . '/../config/redis-auth.php', 'redis-auth');
+
+        if ($this->app->runningInConsole()) {
+
+            $this->publishes([
+                __DIR__ . "/../config/redis-auth.php" => config_path("redis-auth.php")
+            ]);
+        }
     }
 
     /**
