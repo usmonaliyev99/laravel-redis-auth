@@ -2,9 +2,12 @@
 
 The Laravel Redis Auth Package is a Composer package that provides authentication functionality using a Redis database in Laravel applications. It offers a seamless integration with Laravel's authentication system while leveraging the speed and flexibility of Redis for storing user credentials.
 
-## Features
+## Purpose
 
-- Middleware for protecting routes based on authentication
+I wanted to build microservices and I realized that I need a authentication service which can works with all microservices.
+Then I had created this package. If you have three microservices, you should install this package to your all of them and you should connect services to one Redis database.
+When client sends request to get new access token, one of your services creates access token and stores it to Redis database.
+When client sends request to other service with acces token, that service can check token from Redis database.
 
 ## Requirements
 
