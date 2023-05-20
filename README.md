@@ -76,6 +76,7 @@ $accessToken = $user->createAuthToken([
 ```
 
 You can check token's ability with `check` function of `App/Models/User` class in your Controllers.
+If user does not have a ability, `check` function throw `Illuminate/Http/Exceptions/HttpResponseException`.
 
 ```bash
 Auth::user()->check('users.add', "If you want to change error message!");
@@ -88,7 +89,7 @@ auth()->user()->check('messages.show');
 You can protect your routes by adding the auth middleware to them:
 
 ```bash
-Route::group(['middleware' => 'redis-auth'], function () {
+Route::middleware('redis-auth')->group(function () {
     // Protected routes
 });
 ```
