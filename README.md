@@ -41,6 +41,47 @@ REDIS_PORT=6379
 REDIS_PREFIX=''
 ```
 
+You must add `Usmonaliyev\LaravelRedisAuth\Traits\RedisAuthentication` trait to you `App/Models/User` class.
+
+```bash
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+use Usmonaliyev\LaravelRedisAuth\Traits\RedisAuthentication;
+
+class User extends Authenticatable
+{
+    use HasApiTokens, HasFactory, Notifiable, RedisAuthentication;
+    
+    ...
+```
+
+After that you can create access token by `createAuthToken` function of `App/Models/User` class.
+You can create token with abilities. The packge stored all tokens with abilities in Redis database.
+
+```bash
+$user = User::query()
+    ->where('email', $request->string('email'))
+    ->first();
+
+$accessToken = $user->createAuthToken([
+    'users.add',
+    'users.show',
+    'users.delete',
+]);
+
+```
+
+You can check token's ability with `check` function of `App/Models/User` class in your Controllers.
+
+```bash
+Auth::user()->check('users.add', "If you want to change error message!");
+
+OR
+
+auth()->user()->check('messages.show');
+```
+
 You can protect your routes by adding the auth middleware to them:
 
 ```bash
