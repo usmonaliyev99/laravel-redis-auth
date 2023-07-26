@@ -105,4 +105,40 @@ trait RedisAuthentication
 
         throw new InvalidArgumentException("The ability must be either a string or an array.");
     }
+
+    /**
+     * Check a ability
+     *
+     * @param mixed $ability
+     * @param string $message 
+     *
+     * @throws NoAbilityException
+     * @return bool
+     */
+    public function hasAbility(mixed $ability, bool $each = true): bool
+    {
+        if (is_string($ability)) {
+
+            if (!in_array($ability, $this->abilities)) {
+                return false;
+            };
+
+            return true;
+        }
+
+        if (is_array($ability)) {
+
+            $existAbilities = array_filter($ability, fn ($a) => in_array($a, $this->abilities));
+
+            if ($each) {
+                if (count($existAbilities) != count($ability)) return false;
+            } else {
+                return false;
+            }
+
+            return true;
+        }
+
+        throw new InvalidArgumentException("The ability must be either a string or an array.");
+    }
 }
