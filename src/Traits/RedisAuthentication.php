@@ -4,8 +4,8 @@ namespace Usmonaliyev\LaravelRedisAuth\Traits;
 
 use DateTime;
 use DateTimeInterface;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Redis;
+use InvalidArgumentException;
 use Usmonaliyev\LaravelRedisAuth\Exceptions\NoAbilityException;
 
 /**
@@ -17,8 +17,13 @@ trait RedisAuthentication
 
     /**
      * Create auth token to redis database.
+     *
+     * @param array $abilities
+     * @param ?DateTimeInterface $expiresAt
+     *
+     * @return string
      */
-    public function createAuthToken(array $abilities = ['*'], ?DateTimeInterface $expiresAt = null)
+    public function createAuthToken(array $abilities = ['*'], ?DateTimeInterface $expiresAt = null): string
     {
         $accessToken = bin2hex(openssl_random_pseudo_bytes(16));
 
@@ -33,12 +38,14 @@ trait RedisAuthentication
 
     /**
      * Store a token to redis database.
+     *
+     * @param string $token
+     * @param array $abilities
+     * @param ?DateTimeInterface $expiresAt
      */
     private function storeTokenToRedis(string $token, array $abilities, ?DateTimeInterface $expiresAt): void
     {
-        $this->abilities = collect($abilities)
-            ->flip()
-            ->toArray();
+        $this->abilities = $abilities;
 
         if ($expiresAt) {
             $diff = date_diff(new DateTime(), $expiresAt);
@@ -53,6 +60,8 @@ trait RedisAuthentication
 
     /**
      * Get a abilities property
+     *
+     * @return array
      */
     public function getAbilities(): array
     {
@@ -61,17 +70,39 @@ trait RedisAuthentication
 
     /**
      * Check a ability
+     *
+     * @param mixed $ability
+     * @param string $message 
+     *
+     * @throws NoAbilityException
+     * @return bool
      */
-    public function check(mixed $ability, string $message = "You don't have ability..."): bool
+    public function check(mixed $ability, string $message = "You don't have ability...", bool $each = true): bool
     {
-        if (! isset($this->abilities[$ability])) {
-            throw new NoAbilityException(
-                new JsonResponse([
-                    'message' => $message,
-                ], JsonResponse::HTTP_FORBIDDEN)
-            );
+        $error = new NoAbilityException($message);
+
+        if (is_string($ability)) {
+
+            if (!in_array($ability, $this->abilities)) {
+                throw $error;
+            };
+
+            return true;
         }
 
-        return true;
+        if (is_array($ability)) {
+
+            $existAbilities = array_filter($ability, fn ($a) => in_array($a, $this->abilities));
+
+            if ($each) {
+                if (count($existAbilities) != count($ability)) throw $error;
+            } else {
+                if (empty($existAbilities)) throw $error;
+            }
+
+            return true;
+        }
+
+        throw new InvalidArgumentException("The ability must be either a string or an array.");
     }
 }
