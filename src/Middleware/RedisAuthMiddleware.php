@@ -29,16 +29,16 @@ class RedisAuthMiddleware
 
         $token = $receivedToken;
 
-        if (! strpos($token, ':')) {
+        if (!strpos($token, ':')) {
             throw new UnauthorizedException();
         }
 
-        [$receivedToken, $receivedSignature] = explode(':', $receivedToken);
+        [$userId, $receivedToken, $receivedSignature] = explode(':', $receivedToken);
         $calculatedSignature = hash_hmac(config('redis-auth.algo'), $receivedToken, config('redis-auth.secret_key'));
 
         $user = Redis::get($token);
 
-        if ($receivedSignature !== $calculatedSignature or ! $user) {
+        if ($receivedSignature !== $calculatedSignature or !$user) {
             throw new UnauthorizedException();
         }
 

@@ -15,6 +15,8 @@ trait RedisAuthentication
 {
     public $abilities = [];
 
+    public $tokens = [];
+
     /**
      * Create auth token to redis database.
      *
@@ -29,7 +31,7 @@ trait RedisAuthentication
 
         $signature = hash_hmac(config('redis-auth.algo'), $accessToken, config('redis-auth.secret_key'));
 
-        $token = "$accessToken:$signature";
+        $token = "$this->id:$accessToken:$signature";
 
         $this->storeTokenToRedis($token, $abilities, $expiresAt);
 
@@ -140,5 +142,39 @@ trait RedisAuthentication
         }
 
         throw new InvalidArgumentException("The ability must be either a string or an array.");
+    }
+
+    /**
+     * Load tokens from the Redis datastore
+     *
+     */
+    private function loadTokens(): void
+    {
+        $this->tokens = Redis::keys($this->id . ':*');
+    }
+
+    /**
+     * Delete tokens associated with the specified user from the Redis datastore.
+     *
+     */
+    public function deleteTokens(): void
+    {
+        $this->loadTokens();
+
+        array_map(fn ($token) => Redis::del($token), $this->tokens);
+    }
+
+    /**
+     * Set the abilities in the Redis datastore for each tokens
+     *
+     * @param array $abilities An array of abilities or permissions to be set.
+     */
+    public function setAbilities(array $abilities): void
+    {
+        $this->loadTokens();
+
+        $this->abilities = $abilities;
+
+        array_map(fn ($token) => Redis::setex($token, Redis::ttl($token), serialize($this)), $this->tokens);
     }
 }
