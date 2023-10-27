@@ -29,7 +29,7 @@ class RedisAuthMiddleware
 
         $token = $receivedToken;
 
-        if (!strpos($token, ':')) {
+        if (substr_count($token, ':') !== 2) {
             throw new UnauthorizedException();
         }
 
