@@ -1,8 +1,11 @@
 # Laravel Redis Auth Package
 
-![Packagist Downloads](https://img.shields.io/packagist/dm/usmonaliyev/laravel-redis-auth)
-![Packagist Version](https://img.shields.io/packagist/v/usmonaliyev/laravel-redis-auth)
-![Packagist License](https://img.shields.io/packagist/l/usmonaliyev/laravel-redis-auth)
+[![Latest Stable Version](http://poser.pugx.org/usmonaliyev/laravel-redis-auth/v)](https://packagist.org/packages/usmonaliyev/laravel-redis-auth)
+[![Total Downloads](http://poser.pugx.org/usmonaliyev/laravel-redis-auth/downloads)](https://packagist.org/packages/usmonaliyev/laravel-redis-auth)
+[![Latest Unstable Version](http://poser.pugx.org/usmonaliyev/laravel-redis-auth/v/unstable)](https://packagist.org/packages/usmonaliyev/laravel-redis-auth)
+[![License](http://poser.pugx.org/usmonaliyev/laravel-redis-auth/license)](https://packagist.org/packages/usmonaliyev/laravel-redis-auth)
+[![PHP Version Require](http://poser.pugx.org/usmonaliyev/laravel-redis-auth/require/php)](https://packagist.org/packages/usmonaliyev/laravel-redis-auth)
+
 
 The Laravel Redis Auth Package is a Composer package that provides authentication functionality using a Redis database in Laravel applications. It offers a seamless integration with Laravel's authentication system while leveraging the speed and flexibility of Redis for storing user credentials.
 
