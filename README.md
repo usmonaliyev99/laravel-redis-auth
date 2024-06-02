@@ -1,4 +1,4 @@
-# Laravel Redis Auth Package
+# laravel-redis-auth
 
 [![Latest Stable Version](http://poser.pugx.org/usmonaliyev/laravel-redis-auth/v)](https://packagist.org/packages/usmonaliyev/laravel-redis-auth)
 [![Total Downloads](http://poser.pugx.org/usmonaliyev/laravel-redis-auth/downloads)](https://packagist.org/packages/usmonaliyev/laravel-redis-auth)
