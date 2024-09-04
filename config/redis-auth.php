@@ -3,6 +3,13 @@
 return [
 
     /**
+     * Name of redis connection.
+     * 
+     * Note that this name is listed in the redis section of your config/database.php
+     */
+    'connection' => env('REDIS_AUTH_CONNECTION', 'default'),
+
+    /**
      * Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..)
      * See hash_algos for a list of supported algorithms.
      */
@@ -18,6 +25,10 @@ return [
      */
     'token_ttl' => env('REDIS_AUTH_TOKEN_TTL', 3600 * 24),
 
-    'unauthorized_message' => env('UNAUTHORIZED_MESSAGE', 'Unauthorized...'),
 
+    /**
+     * Error message of unauthorized
+     * 
+     */
+    'unauthorized_message' => env('UNAUTHORIZED_MESSAGE', 'Unauthorized...'),
 ];
