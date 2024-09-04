@@ -49,7 +49,7 @@ trait RedisAuthentication
     {
         $this->abilities = $abilities;
 
-        $redis = Redis::connection(config('redis-auth.connection'));
+        $redis = Redis::connection($this->connection());
 
         if ($expiresAt) {
             $diff = date_diff(new DateTime(), $expiresAt);
@@ -70,6 +70,16 @@ trait RedisAuthentication
     public function getAbilities(): array
     {
         return $this->abilities;
+    }
+
+    /**
+     * Get redis connection name
+     * 
+     * @return string
+     */
+    public function connection(): string
+    {
+        return config('redis-auth.connection');
     }
 
     /**
@@ -152,7 +162,7 @@ trait RedisAuthentication
      */
     private function loadTokens(): void
     {
-        $this->tokens = Redis::connection(config('redis-auth.connection'))->keys($this->id . ':*');
+        $this->tokens = Redis::connection($this->connection())->keys($this->id . ':*');
     }
 
     /**
@@ -163,7 +173,7 @@ trait RedisAuthentication
     {
         $this->loadTokens();
 
-        $redis = Redis::connection(config('redis-auth.connection'));
+        $redis = Redis::connection($this->connection());
 
         array_map(fn($token) => $redis->del($token), $this->tokens);
     }
@@ -179,7 +189,7 @@ trait RedisAuthentication
 
         $this->abilities = $abilities;
 
-        $redis = Redis::connection(config('redis-auth.connection'));
+        $redis = Redis::connection($this->connection());
 
         array_map(fn($token) => $redis->setex($token, $redis->ttl($token), serialize($this)), $this->tokens);
     }
