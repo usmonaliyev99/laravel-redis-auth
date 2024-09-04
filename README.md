@@ -5,7 +5,6 @@
 ![Latest Version on Packagist](https://img.shields.io/packagist/v/usmonaliyev/laravel-redis-auth.svg)
 ![Packagist License](https://img.shields.io/packagist/l/usmonaliyev/laravel-redis-auth)
 
-
 The Laravel Redis Auth Package is a Composer package that provides authentication functionality using a Redis database in Laravel applications. It offers a seamless integration with Laravel's authentication system while leveraging the speed and flexibility of Redis for storing user credentials.
 
 ## Purpose
@@ -61,7 +60,7 @@ use Usmonaliyev\LaravelRedisAuth\Traits\RedisAuthentication;
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, RedisAuthentication;
-    
+
     ...
 ```
 
@@ -106,6 +105,13 @@ You can change them.
 ```bash
 
     /**
+     * Name of redis connection.
+     *
+     * Note that this name is listed in the redis section of your config/database.php
+     */
+    'connection' => env('REDIS_AUTH_CONNECTION', 'default'),
+
+    /**
      * Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..)
      * See hash_algos for a list of supported algorithms.
      */
@@ -133,4 +139,3 @@ Contributions are welcome! If you find any issues or have suggestions for improv
 ## License
 
 This package is open-source and released under the MIT License.
-
