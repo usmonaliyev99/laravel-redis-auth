@@ -36,7 +36,7 @@ class RedisAuthMiddleware
         [$userId, $receivedToken, $receivedSignature] = explode(':', $receivedToken);
         $calculatedSignature = hash_hmac(config('redis-auth.algo'), $receivedToken, config('redis-auth.secret_key'));
 
-        $user = Redis::get($token);
+        $user = Redis::connection(config('redis-auth.connection'))->get($token);
 
         if ($receivedSignature !== $calculatedSignature or !$user) {
             throw new UnauthorizedException();

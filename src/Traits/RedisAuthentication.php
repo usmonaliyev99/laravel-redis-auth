@@ -49,14 +49,16 @@ trait RedisAuthentication
     {
         $this->abilities = $abilities;
 
+        $redis = Redis::connection(config('redis-auth.connection'));
+
         if ($expiresAt) {
             $diff = date_diff(new DateTime(), $expiresAt);
 
             $seconds = $diff->s + ($diff->i * 60) + ($diff->h * 3600) + ($diff->days * 86400);
 
-            Redis::setex($token, $seconds, serialize($this));
+            $redis->setex($token, $seconds, serialize($this));
         } else {
-            Redis::setex($token, config('redis-auth.token_ttl'), serialize($this));
+            $redis->setex($token, config('redis-auth.token_ttl'), serialize($this));
         }
     }
 
@@ -94,7 +96,7 @@ trait RedisAuthentication
 
         if (is_array($ability)) {
 
-            $existAbilities = array_filter($ability, fn ($a) => in_array($a, $this->abilities));
+            $existAbilities = array_filter($ability, fn($a) => in_array($a, $this->abilities));
 
             if ($each) {
                 if (count($existAbilities) != count($ability)) throw $error;
@@ -130,7 +132,7 @@ trait RedisAuthentication
 
         if (is_array($ability)) {
 
-            $existAbilities = array_filter($ability, fn ($a) => in_array($a, $this->abilities));
+            $existAbilities = array_filter($ability, fn($a) => in_array($a, $this->abilities));
 
             if ($each) {
                 if (count($existAbilities) != count($ability)) return false;
@@ -150,7 +152,7 @@ trait RedisAuthentication
      */
     private function loadTokens(): void
     {
-        $this->tokens = Redis::keys($this->id . ':*');
+        $this->tokens = Redis::connection(config('redis-auth.connection'))->keys($this->id . ':*');
     }
 
     /**
@@ -161,7 +163,9 @@ trait RedisAuthentication
     {
         $this->loadTokens();
 
-        array_map(fn ($token) => Redis::del($token), $this->tokens);
+        $redis = Redis::connection(config('redis-auth.connection'));
+
+        array_map(fn($token) => $redis->del($token), $this->tokens);
     }
 
     /**
@@ -175,6 +179,8 @@ trait RedisAuthentication
 
         $this->abilities = $abilities;
 
-        array_map(fn ($token) => Redis::setex($token, Redis::ttl($token), serialize($this)), $this->tokens);
+        $redis = Redis::connection(config('redis-auth.connection'));
+
+        array_map(fn($token) => $redis->setex($token, $redis->ttl($token), serialize($this)), $this->tokens);
     }
 }
